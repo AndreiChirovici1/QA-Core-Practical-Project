@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Login or Register - Andrei's Bank{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lobster"
+    xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block content %}
+<div class="body">
+    <form method="POST">
+        <div>
+            <label for="exampleInputEmail1" style="color:white; font-size: 28px;">Register or Login below:</label>
+            <br>
+            <br>
+            <label for="firstname" style="color:white; font-size: 20px;">First name:</label>
+            <input type="text" style="height:50px;" name="firstname">
+            <br>
+            <label for="surname" style="color:white; font-size: 20px;">Last name:</label>
+            <input type="text" style="height:50px;" name="surname">
+            <br>
+            <label for="dob" style="color:white; font-size: 20px;">Date of Birth:</label>
+            <input type="date" style="height:50px;" name="dob">
+            <br>
+            <label for="email" style="color:white; font-size: 20px;">Email:</label>
+            <input type="email" style="height:50px;" name="emailinput">
+            <br>
+            <label for="securecode" style="color:white; font-size: 20px;">6 digit security code:</label>
+            <input type="text" style="height:50px;" name="securecode">
+            <br>
+            <button class="btn1" type="submit">SUBMIT & REGISTER</button>
+        </div>
+    </form>
+
+    <h2 style="color:white; font-size: 28px;">Already have an account? <a href="{{url_for('login')}}">Login</a></label>
+    
+    
+</div>
+{% endblock %}

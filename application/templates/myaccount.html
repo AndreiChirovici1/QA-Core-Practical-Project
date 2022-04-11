@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}My Account - Andrei's Bank{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lobster"
+    xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block content %}
+<div class="body">
+        <div>
+            <label for="exampleInputEmail1" style="color:white; font-size: 28px;">My Account</label>
+            <br>
+            <h2 style="color:white; margin-bottom: 20px;">First name: <input style="height:24px; width:300px;" value ="{{session['firstname']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">Last name: <input style="height:24px; width:300px;" value ="{{session['lastname']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">Date of birth: <input style="height:24px; width:300px;" value ="{{session['dob']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">Email: <input style="height:24px; width:300px;" value ="{{session['email']}}" readonly></h2>
+            <br>
+            <h3 style="color:gold;">Account Balance</h3>
+            <h2 style="color:white; margin-bottom: 20px;">GBP: <input style="height:24px; width:300px;" value ="{{session['gbpbalance']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">EUR: <input style="height:24px; width:300px;" value ="{{session['eurbalance']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">USD: <input style="height:24px; width:300px;" value ="{{session['usdbalance']}}" readonly></h2>
+            
+            <button class="btn1" type="submit"><a href="{{url_for('deleteuser')}}">DELETE ACCOUNT</a></button>
+        </div>
+</div>
+{% endblock %}
