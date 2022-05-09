@@ -6,10 +6,13 @@ from random import randrange
 import random
 import os
 import six
+import json
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import session as sql_session
+import requests
 from application import app, db
 from application.models import users, accounts
+
 
 @app.route('/')
 def home():
@@ -19,6 +22,101 @@ def home():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/currencyexchange', methods=['GET', 'POST'])
+def currencyexchange():
+    if 'email' not in session:
+        return redirect(url_for('home'))
+    
+    if request.method == "POST":
+        # Getting values from form
+        fromcurrency = request.form['fromcurrency'].upper()
+        tocurrency = request.form['tocurrency'].upper()
+        amount = request.form['amountToConvert']
+        amountfloat = float(amount)
+        currencies = ["usd", "eur", "gbp"]
+        insufficientFunds = True
+        
+        if fromcurrency == "GBP":
+            accountno = session['gbpaccountno']
+        if fromcurrency == "EUR":
+            accountno = session['euraccountno']
+        if fromcurrency == "USD":
+            accountno = session['usdaccountno']
+
+        if tocurrency == "GBP":
+            toaccountno = session['gbpaccountno']
+        if tocurrency == "EUR":
+            toaccountno = session['euraccountno']
+        if tocurrency == "USD":
+            toaccountno = session['usdaccountno']
+        
+        account = accounts.query.get(accountno)
+        print(account.balance)
+
+        if amountfloat > account.balance:
+            print("Insufficient funds, please deposit more money or select a different currency.")
+        else:
+            insufficientFunds = False
+            access_key = 'access_key=ad01d5e835ac2f8a2d63ed14c6183b74&base=' + fromcurrency
+            response = requests.get('http://api.exchangeratesapi.io/v1/latest', params=access_key)
+            print(response)
+            print(response.json())
+            print(tocurrency)
+            data = response.json()
+            exchangerate = data['rates'][tocurrency]
+            print(exchangerate)
+            valueinnewcurrency = amountfloat * exchangerate
+            valueinnewcurrencyfinal = str(round(valueinnewcurrency, 2))
+            print(valueinnewcurrency)
+            # Subtracting money used in conversion from old account balance
+            oldbal = account.balance - amountfloat
+            oldbalfinal = float(round(oldbal, 2))
+            account.balance = oldbalfinal
+            db.session.commit()
+            toaccount = accounts.query.get(toaccountno)
+            originalbal = toaccount.balance
+            # Setting new account balance for other currency
+            toaccount.balance = float(originalbal) + float(valueinnewcurrencyfinal)
+            db.session.commit()
+            session['{0}balance'.format(fromcurrency)] = account.balance
+            session['{0}balance'.format(tocurrency)] = toaccount.balance
+
+        if insufficientFunds == True:
+            flash('Insufficient funds, please deposit more money or select a different currency.')
+
+
+    return render_template('currencyexchange.html')
+
+@app.route('/deposit', methods=['GET', 'POST'])
+def depositmoney():
+    if 'email' not in session:
+        return redirect(url_for('home'))
+
+    if request.method == "POST":
+        amount = request.form['amountToDeposit']
+        depositcurrency = request.form['depositcurrency']
+        print(depositcurrency)
+        print(amount)
+
+        if depositcurrency == "gbp":
+            accountno = session['gbpaccountno']
+        if depositcurrency == "eur":
+            accountno = session['euraccountno']
+        if depositcurrency == "usd":
+            accountno = session['usdaccountno']
+
+        # Query to DB using account number
+        account = accounts.query.get(accountno)
+        bal = account.balance
+        newbal = float(bal) + float(amount)
+        newbalfinal = float(round(newbal, 2))
+        account.balance = newbalfinal
+        db.session.commit()
+        session['{0}balance'.format(depositcurrency)] = account.balance
+
+    return render_template('depositmoney.html')
+
 
 @app.route('/myaccount')
 def myaccount():
@@ -44,6 +142,43 @@ def myaccount():
     session['usdbalance'] = usdbalance
 
     return render_template('myaccount.html')
+
+
+@app.route('/latestrates')
+def latestrates():
+
+    fromcurrency = "gbp"
+    access_key = 'access_key=ad01d5e835ac2f8a2d63ed14c6183b74&base=' + fromcurrency
+    response = requests.get('http://api.exchangeratesapi.io/v1/latest', params=access_key)
+    print(response)
+    data = response.json()
+    gbpeur = data['rates']['EUR']
+    gbpusd = data['rates']['USD']
+    session['gbpeur'] = gbpeur
+    session['gbpusd'] = gbpusd
+
+    fromcurrency = "eur"
+    access_key = 'access_key=ad01d5e835ac2f8a2d63ed14c6183b74&base=' + fromcurrency
+    response = requests.get('http://api.exchangeratesapi.io/v1/latest', params=access_key)
+    print(response)
+    data = response.json()
+    eurgbp = data['rates']['GBP']
+    eurusd = data['rates']['USD']
+    session['eurgbp'] = eurgbp
+    session['eurusd'] = eurusd
+
+    fromcurrency = "usd"
+    access_key = 'access_key=ad01d5e835ac2f8a2d63ed14c6183b74&base=' + fromcurrency
+    response = requests.get('http://api.exchangeratesapi.io/v1/latest', params=access_key)
+    print(response)
+    data = response.json()
+    usdeur = data['rates']['EUR']
+    usdgbp = data['rates']['GBP']
+    session['usdeur'] = usdeur
+    session['usdgbp'] = usdgbp
+
+
+    return render_template('latestrates.html')
 
 
 @app.route('/logout')

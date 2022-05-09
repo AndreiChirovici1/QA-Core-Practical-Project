@@ -8,17 +8,44 @@
 
 {% block content %}
 <div class="body">
-        <div>
-            <label for="exampleInputEmail1" style="color:white; font-size: 28px;">Exchnage Currencies at the latest exchange rate</label>
-            <br>
-            <h2 style="color:white; margin-bottom: 20px;">First name: <input style="height:24px; width:300px;" value ="{{session['firstname']}}" readonly></h2>
-            <br>
-            <h3 style="color:gold;">Account Balance</h3>
-            <h2 style="color:white; margin-bottom: 20px;">GBP: <input style="height:24px; width:300px;" value ="{{session['gbpbalance']}}" readonly></h2>
-            <h2 style="color:white; margin-bottom: 20px;">EUR: <input style="height:24px; width:300px;" value ="{{session['eurbalance']}}" readonly></h2>
-            <h2 style="color:white; margin-bottom: 20px;">USD: <input style="height:24px; width:300px;" value ="{{session['usdbalance']}}" readonly></h2>
-            
-            <button class="btn1" type="submit"><a href="{{url_for('deleteuser')}}">DELETE ACCOUNT</a></button>
-        </div>
+    <div>
+        <label for="exampleInputEmail1" style="color:white; font-size: 28px;">Exchange Currencies at the latest exchange
+            rate</label>
+        <br>
+        <ul><li><h4 style="color:white;"><a href="{{url_for('depositmoney')}}">If you'd like to deposit more money just click
+                here.</a></h3></li>
+            <li><h4 style="color:white;"><a href="{{url_for('latestrates')}}">To see the latest exchange rates, click here.</a></h3>
+            </li></ul>
+                <br>
+                <h3 style="color:gold;">Account Balance</h3>
+                <h2 style="color:white; margin-bottom: 20px;">GBP: <input style="height:24px; width:150px;"
+                        value="{{session['gbpbalance']}}" readonly></h2>
+                <h2 style="color:white; margin-bottom: 20px;">EUR: <input style="height:24px; width:150px;"
+                        value="{{session['eurbalance']}}" readonly></h2>
+                <h2 style="color:white; margin-bottom: 20px;">USD: <input style="height:24px; width:150px;"
+                        value="{{session['usdbalance']}}" readonly></h2>
+                <br>
+                <h3 style="color:white;">Current Exchange Rates (Powered by: exchangeratesapi.io)</h3>
+                <form method="POST">
+                    <label for="fromcurrency" style="color:white;">Convert from:</label>
+                    <select name="fromcurrency" id="fromcurrency">
+                        <option value="gbp">GBP</option>
+                        <option value="eur">EUR</option>
+                        <option value="usd">USD</option>
+                    </select>
+                    <label for="tocurrency" style="color:white;">to:</label>
+                    <select name="tocurrency" id="tocurrency">
+                        <option value="gbp">GBP</option>
+                        <option value="eur">EUR</option>
+                        <option value="usd">USD</option>
+                    </select>
+                    <label for="amount" style="color:white; font-size: 20px; margin-left: 20px;">Amount:</label>
+                    <input type="text" style="height:25px; width: 100px; margin-right: 20px;" name="amountToConvert">
+                    <button class="btn1" type="submit">CONVERT</button>
+                </form>
+                <br>
+                <br>
+                <button class="btn1" type="submit"><a href="{{url_for('deleteuser')}}">DELETE ACCOUNT</a></button>
+    </div>
 </div>
 {% endblock %}
