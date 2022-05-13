@@ -15,11 +15,15 @@
             <h2 style="color:white; margin-bottom: 20px;">Last name: <input style="height:24px; width:300px;" value ="{{session['lastname']}}" readonly></h2>
             <h2 style="color:white; margin-bottom: 20px;">Date of birth: <input style="height:24px; width:300px;" value ="{{session['dob']}}" readonly></h2>
             <h2 style="color:white; margin-bottom: 20px;">Email: <input style="height:24px; width:300px;" value ="{{session['email']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">Sort code: <input style="height:24px; width:300px;" value ="{{session['sortcode']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">GBP Account Number: <input style="height:24px; width:300px;" value ="{{session['gbpaccountno']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">EUR Account Number: <input style="height:24px; width:300px;" value ="{{session['euraccountno']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">USD Account Number: <input style="height:24px; width:300px;" value ="{{session['usdaccountno']}}" readonly></h2>
             <br>
             <h3 style="color:gold;">Account Balance</h3>
-            <h2 style="color:white; margin-bottom: 20px;">GBP: <input style="height:24px; width:300px;" value ="{{session['gbpbalance']}}" readonly></h2>
-            <h2 style="color:white; margin-bottom: 20px;">EUR: <input style="height:24px; width:300px;" value ="{{session['eurbalance']}}" readonly></h2>
-            <h2 style="color:white; margin-bottom: 20px;">USD: <input style="height:24px; width:300px;" value ="{{session['usdbalance']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">GBP: <input style="height:24px; width:300px;" value ="£{{session['gbpbalance']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">EUR: <input style="height:24px; width:300px;" value ="€{{session['eurbalance']}}" readonly></h2>
+            <h2 style="color:white; margin-bottom: 20px;">USD: <input style="height:24px; width:300px;" value ="${{session['usdbalance']}}" readonly></h2>
             
             <button class="btn1" type="submit"><a href="{{url_for('deleteuser')}}">DELETE ACCOUNT</a></button>
         </div>

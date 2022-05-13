@@ -21,11 +21,11 @@
                 <br>
                 <h3 style="color:gold;">Account Balance</h3>
                 <h2 style="color:white; margin-bottom: 20px;">GBP: <input style="height:24px; width:150px;"
-                        value="{{session['gbpbalance']}}" readonly></h2>
+                        value="£{{session['gbpbalance']}}" readonly></h2>
                 <h2 style="color:white; margin-bottom: 20px;">EUR: <input style="height:24px; width:150px;"
-                        value="{{session['eurbalance']}}" readonly></h2>
+                        value="€{{session['eurbalance']}}" readonly></h2>
                 <h2 style="color:white; margin-bottom: 20px;">USD: <input style="height:24px; width:150px;"
-                        value="{{session['usdbalance']}}" readonly></h2>
+                        value="${{session['usdbalance']}}" readonly></h2>
                 <br>
                 <h3 style="color:white;">Current Exchange Rates (Powered by: exchangeratesapi.io)</h3>
                 <form method="POST">

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Withdraw Money - Andrei's Bank{% endblock %}
+{% block title %}Transfer Money - Andrei's Bank{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lobster"
@@ -9,18 +9,20 @@
 {% block content %}
 <div class="body">
     <div>
-        <label for="exampleInputEmail1" style="color:white; font-size: 28px;">Withdraw Money</label>
+        <label for="exampleInputEmail1" style="color:white; font-size: 28px;">Transfer Money</label>
         <br>
         <form method="POST">
-            <label for="withdrawcurrency" style="color:white;">Withdraw from:</label>
-            <select name="withdrawcurrency" id="withdrawcurrency">
+            <label for="transfercurrency" style="color:white;">Transfer in:</label>
+            <select name="transfercurrency" id="transfercurrency">
                 <option value="gbp">GBP</option>
                 <option value="eur">EUR</option>
                 <option value="usd">USD</option>
             </select>
             <label for="amount" style="color:white; font-size: 20px; margin-left: 20px;">Amount:</label>
-            <input type="text" style="height:25px; width: 100px; margin-right: 20px;" name="amountToWithdraw">
-            <button class="btn1" type="submit">WITHDRAW FUNDS</button>
+            <input type="text" style="height:25px; width: 100px; margin-right: 20px;" name="amountToTransfer">
+            <label for="trasnferto" style="color:white; font-size: 20px; margin-left: 20px;">Transfer to account number:</label>
+            <input type="text" style="height:25px; width: 100px; margin-right: 20px;" name="transferto">
+            <button class="btn1" type="submit">TRANSFER</button>
         </form>
         <br>
         <h3 style="color:gold;">Account Balance</h3>

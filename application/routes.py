@@ -139,7 +139,7 @@ def withdrawmoney():
         # Query to DB using account number
         account = accounts.query.get(accountno)
         bal = account.balance
-        if float(bal) > float(amount):
+        if float(bal) >= float(amount):
             newbal = float(bal) - float(amount)
             newbalfinal = float(round(newbal, 2))
             account.balance = newbalfinal
@@ -149,6 +149,46 @@ def withdrawmoney():
             flash('Not enough funds to withdraw.', 'error')
 
     return render_template('withdrawmoney.html')
+
+@app.route('/transfer', methods=['GET', 'POST'])
+def transfermoney():
+    if 'email' not in session:
+        return redirect(url_for('home'))
+
+    if request.method == "POST":
+        amount = request.form['amountToTransfer']
+        transfercurrency = request.form['transfercurrency']
+        targetaccountno = request.form['transferto']
+        print(transfercurrency)
+        print(amount)
+
+        if transfercurrency == "gbp":
+            accountno = session['gbpaccountno']
+        if transfercurrency == "eur":
+            accountno = session['euraccountno']
+        if transfercurrency == "usd":
+            accountno = session['usdaccountno']
+
+        # Query to DB using account number
+        account = accounts.query.get(accountno)
+        bal = account.balance
+        if float(bal) >= float(amount):
+            newbal = float(bal) - float(amount)
+            newbalfinal = float(round(newbal, 2))
+            account.balance = newbalfinal
+            db.session.commit()
+            session['{0}balance'.format(transfercurrency)] = account.balance
+
+            transfertoaccount = accounts.query.get(targetaccountno)
+            bal2 = transfertoaccount.balance
+            newbal2 = float(bal2) + float(amount)
+            newbalfinal2 = float(round(newbal2, 2))
+            transfertoaccount.balance = newbalfinal2
+            db.session.commit()
+        else:
+            flash('Not enough funds to withdraw.', 'error')
+
+    return render_template('transfermoney.html')
 
 @app.route('/myaccount')
 def myaccount():
@@ -228,10 +268,13 @@ def deleteuser():
     
     useremail = session['email']
     user = users.query.filter_by(email=useremail).first()
-    account = accounts.query.filter_by(fk_user_id=user.id).first()
+    gbpaccount = accounts.query.filter_by(fk_user_id=user.id).limit(3)[0]
+    euraccount = accounts.query.filter_by(fk_user_id=user.id).limit(3)[1]
+    usdaccount = accounts.query.filter_by(fk_user_id=user.id).limit(3)[2]
     
-    print(account)
-    db.session.delete(account)
+    db.session.delete(gbpaccount)
+    db.session.delete(euraccount)
+    db.session.delete(usdaccount)
     db.session.delete(user)
     db.session.commit()
     session.pop('email', None)
@@ -248,6 +291,9 @@ def login():
         securecode = request.form['securecode']
 
         user = users.query.filter_by(email=emailform).first()
+        gbpaccount = accounts.query.filter_by(fk_user_id=user.id).limit(3)[0]
+        euraccount = accounts.query.filter_by(fk_user_id=user.id).limit(3)[1]
+        usdaccount = accounts.query.filter_by(fk_user_id=user.id).limit(3)[2]
         print(user.securitycode)
         if user.email == emailform:
             print('email true')
@@ -258,6 +304,15 @@ def login():
                 session['firstname'] = user.firstname
                 session['lastname'] = user.surname
                 session['dob'] = user.dob
+
+                session['gbpbalance'] = gbpaccount.balance
+                session['gbpaccountno'] = gbpaccount.accountno
+
+                session['eurbalance'] = euraccount.balance
+                session['euraccountno'] = euraccount.accountno
+
+                session['usdbalance'] = usdaccount.balance
+                session['usdaccountno'] = usdaccount.accountno
                 return redirect(url_for('home'))
         else:
             flash('Email or secure code entered incorrect', 'error')
@@ -311,6 +366,7 @@ def register():
             db.session.add(euraccount)
             db.session.add(usdaccount)
             db.session.commit()
+            session['sortcode'] = banksortcode
             session['gbpaccountno'] = accountnumber
             session['euraccountno'] = accountnumber2
             session['usdaccountno'] = accountnumber3
@@ -327,7 +383,7 @@ def register():
             #msg.body = "Hello, welcome to guess the language! Enjoy playing!"
             #mail.send(msg)
             
-            flash('Record was successfully added')
+            flash('User registration successful. Please login using your details.')
             return redirect(url_for('login'))
 
     return render_template('register.html')
