@@ -169,22 +169,29 @@ def transfermoney():
         if transfercurrency == "usd":
             accountno = session['usdaccountno']
 
+        transfercurrencyselection = transfercurrency.upper()
+
         # Query to DB using account number
         account = accounts.query.get(accountno)
         bal = account.balance
         if float(bal) >= float(amount):
-            newbal = float(bal) - float(amount)
-            newbalfinal = float(round(newbal, 2))
-            account.balance = newbalfinal
-            db.session.commit()
-            session['{0}balance'.format(transfercurrency)] = account.balance
-
             transfertoaccount = accounts.query.get(targetaccountno)
-            bal2 = transfertoaccount.balance
-            newbal2 = float(bal2) + float(amount)
-            newbalfinal2 = float(round(newbal2, 2))
-            transfertoaccount.balance = newbalfinal2
-            db.session.commit()
+            print(transfertoaccount.currency)
+            print(transfercurrencyselection)
+            if transfertoaccount.currency == transfercurrencyselection:
+                newbal = float(bal) - float(amount)
+                newbalfinal = float(round(newbal, 2))
+                account.balance = newbalfinal
+                db.session.commit()
+                session['{0}balance'.format(transfercurrency)] = account.balance
+
+                bal2 = transfertoaccount.balance
+                newbal2 = float(bal2) + float(amount)
+                newbalfinal2 = float(round(newbal2, 2))
+                transfertoaccount.balance = newbalfinal2
+                db.session.commit()
+            else:
+                flash('The account you are attempting to transfer to stores money in ' + transfertoaccount.currency + '. Please convert your currency first, or select a different currency to transfer.', 'error')
         else:
             flash('Not enough funds to withdraw.', 'error')
 
