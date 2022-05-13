@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Withdraw Money - Andrei's Bank{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lobster"
+    xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block content %}
+<div class="body">
+    <div>
+        <label for="exampleInputEmail1" style="color:white; font-size: 28px;">Withdraw Money</label>
+        <br>
+        <form method="POST">
+            <label for="withdrawcurrency" style="color:white;">Withdraw from:</label>
+            <select name="withdrawcurrency" id="withdrawcurrency">
+                <option value="gbp">GBP</option>
+                <option value="eur">EUR</option>
+                <option value="usd">USD</option>
+            </select>
+            <label for="amount" style="color:white; font-size: 20px; margin-left: 20px;">Amount:</label>
+            <input type="text" style="height:25px; width: 100px; margin-right: 20px;" name="amountToWithdraw">
+            <button class="btn1" type="submit">WITHDRAW FUNDS</button>
+        </form>
+        <br>
+        <h3 style="color:gold;">Account Balance</h3>
+        <h2 style="color:white; margin-bottom: 20px;">GBP: <input style="height:24px; width:300px;"
+                value="{{session['gbpbalance']}}" readonly></h2>
+        <h2 style="color:white; margin-bottom: 20px;">EUR: <input style="height:24px; width:300px;"
+                value="{{session['eurbalance']}}" readonly></h2>
+        <h2 style="color:white; margin-bottom: 20px;">USD: <input style="height:24px; width:300px;"
+                value="{{session['usdbalance']}}" readonly></h2>
+
+        <button class="btn1" type="submit"><a href="{{url_for('deleteuser')}}">DELETE ACCOUNT</a></button>
+    </div>
+</div>
+{% endblock %}

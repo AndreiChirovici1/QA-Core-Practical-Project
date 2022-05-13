@@ -118,6 +118,38 @@ def depositmoney():
     return render_template('depositmoney.html')
 
 
+@app.route('/withdraw', methods=['GET', 'POST'])
+def withdrawmoney():
+    if 'email' not in session:
+        return redirect(url_for('home'))
+
+    if request.method == "POST":
+        amount = request.form['amountToWithdraw']
+        withdrawcurrency = request.form['withdrawcurrency']
+        print(withdrawcurrency)
+        print(amount)
+
+        if withdrawcurrency == "gbp":
+            accountno = session['gbpaccountno']
+        if withdrawcurrency == "eur":
+            accountno = session['euraccountno']
+        if withdrawcurrency == "usd":
+            accountno = session['usdaccountno']
+
+        # Query to DB using account number
+        account = accounts.query.get(accountno)
+        bal = account.balance
+        if float(bal) > float(amount):
+            newbal = float(bal) - float(amount)
+            newbalfinal = float(round(newbal, 2))
+            account.balance = newbalfinal
+            db.session.commit()
+            session['{0}balance'.format(withdrawcurrency)] = account.balance
+        else:
+            flash('Not enough funds to withdraw.', 'error')
+
+    return render_template('withdrawmoney.html')
+
 @app.route('/myaccount')
 def myaccount():
     if 'email' not in session:
