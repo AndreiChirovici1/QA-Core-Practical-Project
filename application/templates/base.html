@@ -3,10 +3,10 @@
 
 <head>
 
-    <!-- Linking Local CSS -->
-    <link rel='stylesheet' href="{{ url_for('static', filename='main.css') }}">
-    <script src="{{url_for('static', filename='main.js')}}"></script>
-    <!-- Linking Local Scripts -->
+  <!-- Linking Local CSS -->
+  <link rel='stylesheet' href="{{ url_for('static', filename='main.css') }}">
+  <script src="{{url_for('static', filename='main.js')}}"></script>
+  <!-- Linking Local Scripts -->
 
 
 </head>
@@ -16,31 +16,41 @@
 {% endblock %}
 
 <header class="header">
-<h3 style="float:right; margin-right: 20px;"><a style="color:white;" href="{{url_for('logout')}}">Logout</a></h3>
-    <h1>Andrei's Bank</h1>
-    <nav>
+  {% if 'email' in session: %}
+  <h3 style="float:right; margin-right: 20px;"><a style="color:white;" href="{{url_for('logout')}}">Logout</a></h3>
+  {% endif %}
+  <h1>Andrei's Bank</h1>
+  <nav>
 
-        <!-- Nav bar -->
-        <ul>
-            <li><a href="{{url_for('home')}}">Home</a></li>
-            <li><a href="{{url_for('register')}}">Register</a></li>
-            <li><a href="{{url_for('login')}}">Login</a></li>
-            <li><a href="{{url_for('myaccount')}}">My Account</a></li>
-            <li><a href="{{url_for('currencyexchange')}}">Currency Exchange</a></li>
-            <li><a href="{{url_for('latestrates')}}">Live Exchange Rates</a></li>
-            <li><a href="{{url_for('contact')}}">Contact</a></li>
-        </ul>
-    </nav>
+    <!-- Nav bar -->
+    <ul>
+      {% if 'email' in session: %}
+      <li><a href="{{url_for('home')}}">Home</a></li>
+      <li><a href="{{url_for('latestrates')}}">Live Exchange Rates</a></li>
+      <li><a href="{{url_for('myaccount')}}">My Account</a></li>
+      <li><a href="{{url_for('currencyexchange')}}">Currency Exchange</a></li>
+      <li><a href="{{url_for('contact')}}">Contact</a></li>
+      {% else: %}
+      <li><a href="{{url_for('home')}}">Home</a></li>
+      <li><a href="{{url_for('register')}}">Register</a></li>
+      <li><a href="{{url_for('login')}}">Login</a></li>
+      <li><a href="{{url_for('latestrates')}}">Live Exchange Rates</a></li>
+      <li><a href="{{url_for('contact')}}">Contact</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+
 </header>
 <!-- Flash section -->
 {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li style="color:red; font-weight: bold; font-size: 20px;">{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
+{% if messages %}
+<ul class=flashes>
+  {% for message in messages %}
+  <li style="color:red; font-weight: bold; font-size: 20px;">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
 {% endwith %}
 
 {% block content %}
@@ -48,6 +58,7 @@
 {% endblock %}
 
 <footer class="footer">
-    <p>Copyright &copy; 2022 <a href="">Andrei Chirovici</a></p>
+  <p>Copyright &copy; 2022 <a href="">Andrei Chirovici</a></p>
 </footer>
+
 </html>
