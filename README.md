@@ -27,7 +27,7 @@ For this project, I used Trello to map out the tasks required for the duration o
 ![Risk Assessment](Risk-assessment-snippet.PNG)
 
 # Known Issues
-- Currently a user can transfer the wrong currency into another user's account. For example 10 GBP can go into the USD or EUR account of another user. I'd like to make it so that the app blocks this and tells the user to convert the currency before transferring.
+- Some data validation entry issues.
 
 # Future Improvements
 In the future I'd like to: 
